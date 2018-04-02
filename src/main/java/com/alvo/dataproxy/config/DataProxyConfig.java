@@ -1,10 +1,8 @@
 package com.alvo.dataproxy.config;
 
-import com.alvo.dataproxy.model.Tweet;
-import com.alvo.dataproxy.receiver.TweetMessageListener;
+import com.alvo.dataproxy.receiver.TweetMessageListenerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.AcknowledgeMode;
-import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -15,9 +13,6 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class DataProxyConfig {
@@ -57,17 +52,12 @@ public class DataProxyConfig {
   }
 
   @Bean
-  public SimpleMessageListenerContainer rabbitMessageListenerContainer() {
+  public SimpleMessageListenerContainer rabbitMessageListenerContainer(TweetMessageListenerService messageListener) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory());
     container.setQueues(tweetQueue());
     container.setConcurrentConsumers(1);
     container.setAcknowledgeMode(AcknowledgeMode.AUTO);
-    container.setMessageListener(new MessageListenerAdapter(tweetMessageListener(), messageConverter()));
+    container.setMessageListener(new MessageListenerAdapter(messageListener, messageConverter()));
     return container;
-  }
-
-  @Bean
-  public MessageListener tweetMessageListener() {
-    return new TweetMessageListener();
   }
 }
