@@ -27,6 +27,8 @@ public class DataProxyConfig {
   private String rabbitmqPassword;
   @Value("${spring.rabbitmq.queue.name}")
   private String queueName;
+  @Value("${spring.rabbitmq.concurrent.consumers:1}")
+  private Integer concurrentConsumers;
 
   @Bean
   public ObjectMapper objectMapper() {
@@ -55,7 +57,7 @@ public class DataProxyConfig {
   public SimpleMessageListenerContainer rabbitMessageListenerContainer(TweetMessageListenerService messageListener) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory());
     container.setQueues(tweetQueue());
-    container.setConcurrentConsumers(1);
+    container.setConcurrentConsumers(concurrentConsumers);
     container.setAcknowledgeMode(AcknowledgeMode.AUTO);
     container.setMessageListener(new MessageListenerAdapter(messageListener, messageConverter()));
     return container;

@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.alvo</groupId>
-    <artifactId>dataproxy</artifactId>
+    <artifactId>twitter-sentiment-analyzer-dataproxy</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>dataproxy</name>
-    <description>Demo project for Spring Boot</description>
+    <name>twitter-sentiment-analyzer-dataproxy</name>
+    <description>Persistence proxy for twitter sentiment analyzer infrastructure</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -55,6 +55,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.3.6</version>
+                <configuration>
+                    <repository>${project.artifactId}</repository>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>

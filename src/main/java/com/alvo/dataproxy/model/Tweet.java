@@ -83,7 +83,6 @@ public class Tweet {
 
   @Override
   public int hashCode() {
-
     return Objects.hash(getId(), getText(), getSentimentLevel(), getSavedAt());
   }
 }
